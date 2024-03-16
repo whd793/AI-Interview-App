@@ -284,24 +284,50 @@ export const LanguageContext = createContext();
 
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState('en');
+  const [mounted, setMounted] = useState(false);
 
-  // Load language preference on mount
+  // // Load language preference on mount
+  // useEffect(() => {
+  //   const savedLanguage = localStorage.getItem('preferred-language');
+  //   if (savedLanguage) {
+  //     setLanguage(savedLanguage);
+  //   } else {
+  //     // If no saved preference, check browser language
+  //     const browserLang = navigator.language;
+  //     setLanguage(browserLang.startsWith('ko') ? 'ko' : 'en');
+  //   }
+  // }, []);
+  // Only run this effect on client-side
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('preferred-language');
+    setMounted(true);
+    const savedLanguage = window?.localStorage?.getItem('preferred-language');
     if (savedLanguage) {
       setLanguage(savedLanguage);
     } else {
       // If no saved preference, check browser language
-      const browserLang = navigator.language;
-      setLanguage(browserLang.startsWith('ko') ? 'ko' : 'en');
+      const browserLang = window?.navigator?.language;
+      setLanguage(browserLang?.startsWith('ko') ? 'ko' : 'en');
     }
   }, []);
 
-  // Save language preference whenever it changes
+  // // Save language preference whenever it changes
+  // const handleSetLanguage = (newLang) => {
+  //   setLanguage(newLang);
+  //   localStorage.setItem('preferred-language', newLang);
+  // };
+
+  // Only save to localStorage on client-side
   const handleSetLanguage = (newLang) => {
     setLanguage(newLang);
-    localStorage.setItem('preferred-language', newLang);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('preferred-language', newLang);
+    }
   };
+
+  // Don't render children until mounted (client-side)
+  if (!mounted) {
+    return null; // or a loading spinner
+  }
 
   const t = (key) => translations[language]?.[key] || translations.en[key];
 
