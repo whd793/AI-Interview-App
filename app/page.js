@@ -19,10 +19,10 @@ export default function Home() {
           <p className='mb-8 text-lg font-normal text-gray-100 lg:text-xl sm:px-16 xl:px-48 '>
             AI 면접으로 연습해서 취업률을 높여보세요!
           </p>
-          <div className='flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4'>
+          <div className='flex mb-8 lg:mb-16 space-y-4 flex-row justify-center space-x-4'>
             <a
               href='/dashboard'
-              className='inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900'
+              className='inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary hover:ring-4 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900'
             >
               시작하기
               <svg
