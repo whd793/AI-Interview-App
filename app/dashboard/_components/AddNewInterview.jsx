@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-// import { chatSession } from '@/utils/GeminiAIModal';
+import { chatSession } from '@/utils/GeminiAIModal';
 import { LoaderCircle } from 'lucide-react';
 import { db } from '@/utils/db';
 import { MockInterview } from '@/utils/schema';
@@ -45,7 +45,7 @@ function AddNewInterview() {
       process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT +
       ' Interview question along with Answer in JSON format, Give us question and answer field on JSON';
 
-    // const result = await chatSession.sendMessage(InputPrompt);
+    const result = await chatSession.sendMessage(InputPrompt);
     const MockJsonResp = result.response
       .text()
       .replace('```json', '')
