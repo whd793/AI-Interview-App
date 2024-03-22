@@ -6,13 +6,19 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { chatSession } from '@/utils/GeminiAIModal';
-import { LoaderCircle } from 'lucide-react';
+import { LoaderCircle, Globe } from 'lucide-react';
 import { db } from '@/utils/db';
 import { MockInterview } from '@/utils/schema';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,39 +27,70 @@ import moment from 'moment';
 import { useRouter } from 'next/navigation';
 
 function AddNewInterview() {
-  const [openDailog, setOpenDailog] = useState(false);
-  const [jobPosition, setJobPosition] = useState();
-  const [jobDesc, setJobDesc] = useState();
-  const [jobExperience, setJobExperience] = useState();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [jobPosition, setJobPosition] = useState('');
+  const [jobDesc, setJobDesc] = useState('');
+  const [jobExperience, setJobExperience] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
   const router = useRouter();
   const { user } = useUser();
+
+  const languages = [
+    {
+      code: 'en',
+      name: 'English',
+      prompt: 'Generate the questions and answers in English',
+    },
+    {
+      code: 'ko',
+      name: '한국어',
+      prompt: '질문과 답변을 한국어로 생성해주세요',
+    },
+    {
+      code: 'ja',
+      name: '日本語',
+      prompt: '質問と回答を日本語で生成してください',
+    },
+    { code: 'zh', name: '中文', prompt: '请用中文生成问题和答案' },
+  ];
+
   const onSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
-    console.log(jobPosition, jobDesc, jobExperience);
 
-    const InputPrompt =
-      'Job position: ' +
-      jobPosition +
-      ', Job Description: ' +
-      jobDesc +
-      ', Years of Experience : ' +
-      jobExperience +
-      ' , Depends on Job Position, Job Description & Years of Experience give us ' +
-      process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT +
-      ' Interview question along with Answer in JSON format, Give us question and answer field on JSON';
+    const selectedLangPrompt =
+      languages.find((lang) => lang.code === selectedLanguage)?.prompt ||
+      'Generate in English';
 
-    const result = await chatSession.sendMessage(InputPrompt);
-    const MockJsonResp = result.response
-      .text()
-      .replace('```json', '')
-      .replace('```', '');
-    console.log(JSON.parse(MockJsonResp));
-    setJsonResponse(MockJsonResp);
+    const InputPrompt = `
+      Job position: ${jobPosition}
+      Job Description: ${jobDesc}
+      Years of Experience: ${jobExperience}
+      
+      Based on the above job details, please provide ${
+        process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT
+      } interview questions and answers.
+      ${selectedLangPrompt}.
+      
+      Return the response in JSON format with 'question' and 'answer' fields for each item.
+      Keep the JSON structure but generate content in ${
+        languages.find((lang) => lang.code === selectedLanguage)?.name
+      }.
+    `;
 
-    if (MockJsonResp) {
+    try {
+      const result = await chatSession.sendMessage(InputPrompt);
+      const MockJsonResp = result.response
+        .text()
+        .replace('```json', '')
+        .replace('```', '')
+        .trim();
+
+      console.log('Generated response:', JSON.parse(MockJsonResp));
+      setJsonResponse(MockJsonResp);
+
       const resp = await db
         .insert(MockInterview)
         .values({
@@ -62,86 +99,113 @@ function AddNewInterview() {
           jobPosition: jobPosition,
           jobDesc: jobDesc,
           jobExperience: jobExperience,
+          language: selectedLanguage,
           createdBy: user?.primaryEmailAddress?.emailAddress,
           createdAt: moment().format('DD-MM-yyyy'),
         })
         .returning({ mockId: MockInterview.mockId });
 
-      console.log('Inserted ID:', resp);
-      if (resp) {
-        setOpenDailog(false);
-        router.push('/dashboard/interview/' + resp[0]?.mockId);
+      if (resp?.[0]?.mockId) {
+        setOpenDialog(false);
+        router.push('/dashboard/interview/' + resp[0].mockId);
       }
-    } else {
-      console.log('ERROR');
+    } catch (error) {
+      console.error('Error generating interview:', error);
+      // You might want to show an error toast here
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
+
   return (
     <div>
       <div
-        className='p-10 border rounded-lg bg-secondary
-        hover:scale-105 hover:shadow-md cursor-pointer
-         transition-all border-dashed'
-        onClick={() => setOpenDailog(true)}
+        className='p-10 border rounded-lg bg-secondary hover:scale-105 hover:shadow-md cursor-pointer transition-all border-dashed'
+        onClick={() => setOpenDialog(true)}
       >
         <h2 className='text-lg text-center'>+ Add New</h2>
       </div>
-      <Dialog open={openDailog}>
+
+      <Dialog open={openDialog}>
         <DialogContent className='max-w-2xl'>
           <DialogHeader>
             <DialogTitle className='text-2xl'>
-              Tell us more about your job interviwing
+              Tell us more about your job interview
             </DialogTitle>
             <DialogDescription>
-              <form onSubmit={onSubmit}>
-                <div>
-                  <h2>
-                    Add Details about yout job position/role, Job description
-                    and years of experience
-                  </h2>
+              <form onSubmit={onSubmit} className='space-y-6'>
+                <div className='space-y-4'>
+                  <div className='flex justify-end'>
+                    <Select
+                      value={selectedLanguage}
+                      onValueChange={setSelectedLanguage}
+                    >
+                      <SelectTrigger className='w-[180px]'>
+                        <SelectValue placeholder='Select Language' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {languages.map((lang) => (
+                          <SelectItem key={lang.code} value={lang.code}>
+                            <div className='flex items-center gap-2'>
+                              <Globe className='w-4 h-4' />
+                              {lang.name}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                  <div className='mt-7 my-3'>
-                    <label>Job Role/Job Position</label>
+                  <div>
+                    <label className='block text-sm font-medium mb-2'>
+                      Job Role/Job Position
+                    </label>
                     <Input
                       placeholder='Ex. Full Stack Developer'
                       required
-                      onChange={(event) => setJobPosition(event.target.value)}
+                      onChange={(e) => setJobPosition(e.target.value)}
                     />
                   </div>
-                  <div className=' my-3'>
-                    <label>Job Description/ Tech Stack (In Short)</label>
+
+                  <div>
+                    <label className='block text-sm font-medium mb-2'>
+                      Job Description/Tech Stack (In Short)
+                    </label>
                     <Textarea
-                      placeholder='Ex. React, Angular, NodeJs, MySql etc'
+                      placeholder='Ex. React, Angular, NodeJs, MySQL etc'
                       required
-                      onChange={(event) => setJobDesc(event.target.value)}
+                      onChange={(e) => setJobDesc(e.target.value)}
                     />
                   </div>
-                  <div className=' my-3'>
-                    <label>Years of experience</label>
+
+                  <div>
+                    <label className='block text-sm font-medium mb-2'>
+                      Years of experience
+                    </label>
                     <Input
-                      placeholder='Ex.5'
+                      placeholder='Ex. 5'
                       type='number'
                       max='100'
                       required
-                      onChange={(event) => setJobExperience(event.target.value)}
+                      onChange={(e) => setJobExperience(e.target.value)}
                     />
                   </div>
                 </div>
-                <div className='flex gap-5 justify-end'>
+
+                <div className='flex gap-4 justify-end'>
                   <Button
                     type='button'
                     variant='ghost'
-                    onClick={() => setOpenDailog(false)}
+                    onClick={() => setOpenDialog(false)}
                   >
                     Cancel
                   </Button>
                   <Button type='submit' disabled={loading}>
                     {loading ? (
-                      <>
-                        <LoaderCircle className='animate-spin' /> Generating
-                        from AI
-                      </>
+                      <span className='flex items-center gap-2'>
+                        <LoaderCircle className='animate-spin' />
+                        Generating from AI
+                      </span>
                     ) : (
                       'Start Interview'
                     )}
