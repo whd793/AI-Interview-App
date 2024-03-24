@@ -19,16 +19,22 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+import { useLanguage } from '@/app/providers/LanguageProvider';
 function RecordAnswerSection({
   mockInterviewQuestion,
   activeQuestionIndex,
   interviewData,
+  setIsProcessing, // Add this prop
 }) {
+  const { t } = useLanguage();
+
   const [userAnswer, setUserAnswer] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('ko-KR');
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [transcriptionTimeout, setTranscriptionTimeout] = useState(null);
+
+  const [displayText, setDisplayText] = useState('');
 
   const {
     error,
@@ -56,12 +62,30 @@ function RecordAnswerSection({
     { code: 'zh-CN', name: '中文' },
   ];
 
+  // useEffect(() => {
+  //   if (results?.length > 0) {
+  //     const newTranscript = results[results.length - 1]?.transcript || '';
+  //     setUserAnswer((prev) => prev + ' ' + newTranscript);
+  //   }
+  // }, [results]);
+
   useEffect(() => {
     if (results?.length > 0) {
-      const newTranscript = results[results.length - 1]?.transcript || '';
-      setUserAnswer((prev) => prev + ' ' + newTranscript);
+      // Combine all results into one string
+      const fullTranscript = results.map((r) => r.transcript).join(' ');
+      setUserAnswer(fullTranscript);
+      setDisplayText(fullTranscript);
     }
   }, [results]);
+
+  // Add effect for interim results
+  useEffect(() => {
+    if (interimResult) {
+      setDisplayText((prevText) => userAnswer + ' ' + interimResult);
+    } else {
+      setDisplayText(userAnswer);
+    }
+  }, [interimResult, userAnswer]);
 
   // Handle language change
   const handleLanguageChange = (value) => {
@@ -146,6 +170,8 @@ function RecordAnswerSection({
     }
 
     setLoading(true);
+    setIsProcessing(true); // Add this
+
     try {
       // Add language-specific instructions
       const languageInstructions = {
@@ -171,7 +197,7 @@ function RecordAnswerSection({
 
       const JsonFeedbackResp = JSON.parse(mockJsonResp);
 
-      await db.insert(UserAnswer).values({
+      const resp = await db.insert(UserAnswer).values({
         mockIdRef: interviewData?.mockId,
         question: mockInterviewQuestion[activeQuestionIndex]?.question,
         correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
@@ -182,14 +208,17 @@ function RecordAnswerSection({
         createdAt: moment().format('DD-MM-yyyy'),
         language: selectedLanguage,
       });
-
-      toast.success('Answer recorded successfully');
-      setUserAnswer('');
-      setResults([]);
+      if (resp) {
+        toast.success('Answer recorded successfully');
+        setUserAnswer('');
+        setResults([]);
+      }
     } catch (err) {
       toast.error(`Failed to update answer: ${err.message}`);
     } finally {
       setLoading(false);
+      setIsProcessing(false); // Add this
+      setResults([]);
     }
   };
 
@@ -197,7 +226,7 @@ function RecordAnswerSection({
     <div className='flex items-center justify-center flex-col'>
       <div className='flex flex-col gap-4 w-full max-w-xl mb-6'>
         <div className='flex justify-between items-center'>
-          <h3 className='text-lg font-medium'>Recording Settings</h3>
+          <h3 className='text-lg font-medium'>{t('recordingSettings')}</h3>
           <Select value={selectedLanguage} onValueChange={handleLanguageChange}>
             <SelectTrigger className='w-[180px]'>
               <SelectValue placeholder='Select Language' />
@@ -256,9 +285,9 @@ function RecordAnswerSection({
         )}
       </Button>
 
-      {(interimResult || userAnswer) && (
+      {/* {(interimResult || userAnswer) && (
         <div className='w-full max-w-xl p-4 bg-gray-50 rounded-lg'>
-          <h4 className='font-medium mb-2'>Transcription:</h4>
+          <h4 className='font-medium mb-2'>{t('transcription')}</h4>
           <p className='text-gray-700'>
             {interimResult ? (
               <span className='opacity-70'>{interimResult}</span>
@@ -267,7 +296,11 @@ function RecordAnswerSection({
             )}
           </p>
         </div>
-      )}
+      )} */}
+      <div className='w-full max-w-xl p-4 bg-gray-50 rounded-lg'>
+        <h4 className='font-medium mb-2'>{t('transcription')}</h4>
+        <p className='text-gray-700 whitespace-pre-wrap'>{displayText}</p>
+      </div>
     </div>
   );
 }

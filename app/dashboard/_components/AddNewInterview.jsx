@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -26,7 +26,10 @@ import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
 
+import { useLanguage } from '@/app/providers/LanguageProvider';
 function AddNewInterview() {
+  const { t } = useLanguage();
+
   const [openDialog, setOpenDialog] = useState(false);
   const [jobPosition, setJobPosition] = useState('');
   const [jobDesc, setJobDesc] = useState('');
@@ -34,6 +37,9 @@ function AddNewInterview() {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse] = useState([]);
+  const [savedLanguage, setSavedLanguage] = useState(
+    localStorage.getItem('preferred-language') || ''
+  );
   const router = useRouter();
   const { user } = useUser();
 
@@ -55,6 +61,12 @@ function AddNewInterview() {
     },
     { code: 'zh', name: '中文', prompt: '请用中文生成问题和答案' },
   ];
+
+  useEffect(() => {
+    if (savedLanguage) {
+      setSelectedLanguage(savedLanguage);
+    }
+  }, []);
 
   const onSubmit = async (e) => {
     setLoading(true);
@@ -116,32 +128,32 @@ function AddNewInterview() {
       setLoading(false);
     }
   };
-
   return (
     <div>
       <div
         className='p-10 border rounded-lg bg-secondary hover:scale-105 hover:shadow-md cursor-pointer transition-all border-dashed'
         onClick={() => setOpenDialog(true)}
       >
-        <h2 className='text-lg text-center'>+ Add New</h2>
+        <h2 className='text-lg text-center'>{t('addNew')}</h2>
       </div>
 
-      <Dialog open={openDialog}>
+      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className='max-w-2xl'>
           <DialogHeader>
-            <DialogTitle className='text-2xl'>
-              Tell us more about your job interview
-            </DialogTitle>
+            <DialogTitle className='text-2xl'>{t('tellMore')}</DialogTitle>
             <DialogDescription>
               <form onSubmit={onSubmit} className='space-y-6'>
                 <div className='space-y-4'>
                   <div className='flex justify-end'>
+                    <label className='block text-sm font-medium content-center mr-2'>
+                      {t('questionLanguage')}:{' '}
+                    </label>
                     <Select
                       value={selectedLanguage}
                       onValueChange={setSelectedLanguage}
                     >
                       <SelectTrigger className='w-[180px]'>
-                        <SelectValue placeholder='Select Language' />
+                        <SelectValue placeholder={t('selectLanguage')} />
                       </SelectTrigger>
                       <SelectContent>
                         {languages.map((lang) => (
@@ -158,10 +170,10 @@ function AddNewInterview() {
 
                   <div>
                     <label className='block text-sm font-medium mb-2'>
-                      Job Role/Job Position
+                      {t('jobRole')}
                     </label>
                     <Input
-                      placeholder='Ex. Full Stack Developer'
+                      placeholder={t('jobRolePlaceholder')}
                       required
                       onChange={(e) => setJobPosition(e.target.value)}
                     />
@@ -169,10 +181,10 @@ function AddNewInterview() {
 
                   <div>
                     <label className='block text-sm font-medium mb-2'>
-                      Job Description/Tech Stack (In Short)
+                      {t('jobDesc')}
                     </label>
                     <Textarea
-                      placeholder='Ex. React, Angular, NodeJs, MySQL etc'
+                      placeholder={t('jobDescPlaceholder')}
                       required
                       onChange={(e) => setJobDesc(e.target.value)}
                     />
@@ -180,10 +192,10 @@ function AddNewInterview() {
 
                   <div>
                     <label className='block text-sm font-medium mb-2'>
-                      Years of experience
+                      {t('yearsExp')}
                     </label>
                     <Input
-                      placeholder='Ex. 5'
+                      placeholder={t('yearsExpPlaceholder')}
                       type='number'
                       max='100'
                       required
@@ -198,16 +210,16 @@ function AddNewInterview() {
                     variant='ghost'
                     onClick={() => setOpenDialog(false)}
                   >
-                    Cancel
+                    {t('cancel')}
                   </Button>
                   <Button type='submit' disabled={loading}>
                     {loading ? (
                       <span className='flex items-center gap-2'>
                         <LoaderCircle className='animate-spin' />
-                        Generating from AI
+                        {t('generatingAI')}
                       </span>
                     ) : (
-                      'Start Interview'
+                      t('startInterview')
                     )}
                   </Button>
                 </div>
