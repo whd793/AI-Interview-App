@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const translations = {
   en: {
     dashboard: 'Dashboard',
+    analytics: 'Analytics',
     createInterview: 'Create and Start your AI Mockup Interview',
     questions: 'Questions',
     upgrade: 'Upgrade',
@@ -154,9 +155,21 @@ const translations = {
 
     noInterviewsYet: 'No interviews yet',
     createFirstInterview: 'Create your first interview to get started',
+
+    performanceAnalytics: 'Performance Analytics',
+    totalInterviews: 'Total Interviews',
+    averageRating: 'Average Rating',
+    progressOverTime: 'Progress Over Time',
+    ratingTrend: 'Your rating trend across all interviews',
+    performanceByRole: 'Performance by Role',
+    averageRatingByPosition: 'Average rating for each job position',
+    areasForImprovement: 'Areas for Improvement',
+    questionsNeedingWork: 'Questions that need more practice',
+    rating: 'Rating',
   },
   ko: {
     dashboard: '대시보드',
+    analytics: '분석',
     createInterview: '새로운 면접을 만들어보세요',
     questions: '질문',
     upgrade: '업그레이드',
@@ -302,6 +315,17 @@ const translations = {
 
     noInterviewsYet: '아직 면접이 없습니다',
     createFirstInterview: '첫 면접을 생성하여 시작하세요',
+
+    performanceAnalytics: '성과 분석',
+    totalInterviews: '전체 면접 수',
+    averageRating: '평균 평가',
+    progressOverTime: '시간별 진행 상황',
+    ratingTrend: '모든 면접에 대한 평가 추이',
+    performanceByRole: '직무별 성과',
+    averageRatingByPosition: '각 직무별 평균 평가',
+    areasForImprovement: '개선이 필요한 영역',
+    questionsNeedingWork: '더 많은 연습이 필요한 질문들',
+    rating: '평가',
   },
 };
 
