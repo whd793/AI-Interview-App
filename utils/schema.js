@@ -1,4 +1,4 @@
-import { pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, varchar, integer } from 'drizzle-orm/pg-core';
 
 export const MockInterview = pgTable('mockInterview', {
   id: serial('id').primaryKey(),
@@ -24,3 +24,26 @@ export const UserAnswer = pgTable('userAnswer', {
   createdAt: varchar('createdAt'),
   language: varchar('language', { length: 10 }).notNull().default('en-US'), // Add this line
 });
+
+// export const QuestionBank = pgTable('questionBank', {
+//   id: serial('id').primaryKey(),
+//   questionId: varchar('questionId').notNull(), // to link translations
+//   question: text('question').notNull(),
+//   category: varchar('category').notNull(), // behavioural, technical, situational
+//   difficulty: varchar('difficulty').notNull(), // easy, medium, hard
+//   roleCategory: varchar('roleCategory').notNull(), // frontend, backend, fullstack, all
+//   experienceLevel: varchar('experienceLevel').notNull(), // junior, mid, senior
+//   commonFor: text('commonFor').notNull(), // JSON array of roles
+//   sampleAnswer: text('sampleAnswer').notNull(),
+//   tips: text('tips').notNull(),
+//   popularity: integer('popularity').notNull(),
+//   language: varchar('language').notNull().default('en'),
+//   createdAt: varchar('createdAt').notNull(),
+// });
+
+// export const SavedQuestions = pgTable('savedQuestions', {
+//   id: serial('id').primaryKey(),
+//   questionId: integer('questionId').notNull(),
+//   userEmail: varchar('userEmail').notNull(),
+//   createdAt: varchar('createdAt').notNull(),
+// });
