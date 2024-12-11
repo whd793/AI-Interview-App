@@ -252,17 +252,17 @@ function RecordAnswerSection({
       </div>
 
       <div className='relative flex flex-col items-center bg-black rounded-lg p-5'>
-        <Image
+        {/* <Image
           src='/webcam.png'
           width={200}
           height={200}
           alt='Webcam overlay'
           className='absolute'
-        />
+        /> */}
         <Webcam
           mirrored={true}
           className='z-10 rounded-lg'
-          style={{ height: 500, width: 500 }}
+          style={{ width: 500 }}
         />
       </div>
 
