@@ -98,13 +98,15 @@ function Header() {
           </li>
         </Link>
 
-        <li
-          className={`hover:text-primary hover:font-bold transition-all cursor-pointer ${
-            path == '/dashboard/questions' && 'text-primary font-bold'
-          }`}
-        >
-          {t('questions')}
-        </li>
+        <Link href={'/dashboard/questions'}>
+          <li
+            className={`hover:text-primary hover:font-bold transition-all cursor-pointer ${
+              path == '/dashboard/questions' && 'text-primary font-bold'
+            }`}
+          >
+            {t('questions')}
+          </li>
+        </Link>
 
         <Link href={'/dashboard/upgrade'}>
           <li
@@ -116,14 +118,15 @@ function Header() {
           </li>
         </Link>
 
-        <li
-          className={`hover:text-primary hover:font-bold transition-all cursor-pointer ${
-            path == '/dashboard/how' && 'text-primary font-bold'
-          }`}
-        >
-          {t('howItWorks')}
-        </li>
-
+        <Link href={'/dashboard/how'}>
+          <li
+            className={`hover:text-primary hover:font-bold transition-all cursor-pointer ${
+              path == '/dashboard/how' && 'text-primary font-bold'
+            }`}
+          >
+            {t('howItWorks')}
+          </li>
+        </Link>
         <Select value={language} onValueChange={setLanguage}>
           <SelectTrigger className='w-[110px]'>
             <Globe className='mr-2 h-4 w-4' />

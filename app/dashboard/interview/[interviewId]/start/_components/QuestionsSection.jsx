@@ -21,7 +21,7 @@ function QuestionsSection({ mockInterviewQuestion, activeQuestionIndex }) {
                 text-xs md:text-sm text-center cursor-pointer
                 ${activeQuestionIndex == index && 'bg-primary text-white'}`}
               >
-                Question #{index + 1}
+                #{index + 1}
               </h2>
             ))}
         </div>

@@ -117,6 +117,43 @@ const translations = {
     information: 'Information',
     enableWebcam: 'Enable Web Cam and Microphone',
     startInterview: 'Start Interview',
+
+    allQuestions: 'All Questions',
+    noInterviewsYet: 'No interviews yet. Create one to see questions here.',
+    yearsExp: 'years of experience',
+    suggestedAnswer: 'Suggested Answer',
+
+    howItWorksTitle: 'How AI Interview Practice Works',
+    howItWorksSubtitle:
+      'Master your interview skills with our AI-powered practice platform',
+
+    step1Title: 'Create Your Interview',
+    step1Description:
+      'Select your job position, describe your desired role, and specify your experience level. Our AI will generate relevant interview questions tailored to your profile.',
+
+    step2Title: 'Prepare Your Setup',
+    step2Description:
+      'Enable your webcam and microphone to create a realistic interview environment. Practice your body language and verbal communication just like in a real interview.',
+
+    step3Title: 'Answer Questions',
+    step3Description:
+      'Respond to interview questions naturally in your preferred language. Our speech-to-text technology accurately captures your responses for analysis.',
+
+    step4Title: 'Get AI Feedback',
+    step4Description:
+      'Receive immediate, detailed feedback on your answers from our AI. Learn what you did well and where you can improve.',
+
+    step5Title: 'Track Progress',
+    step5Description:
+      'Review your interview history, track your improvement over time, and practice specific areas that need attention.',
+
+    readyToStart: 'Ready to Start Practicing?',
+    readyToStartDescription:
+      'Begin your journey to interview success with AI-powered practice sessions.',
+    startPracticing: 'Start Practicing Now',
+
+    noInterviewsYet: 'No interviews yet',
+    createFirstInterview: 'Create your first interview to get started',
   },
   ko: {
     dashboard: '대시보드',
@@ -229,6 +266,42 @@ const translations = {
     information: '안내',
     enableWebcam: '웹캠과 마이크 활성화',
     startInterview: '면접 시작',
+
+    allQuestions: '모든 질문',
+    noInterviewsYet: '아직 면접이 없습니다. 면접을 생성하여 질문을 확인하세요.',
+    yearsExp: '년 경력',
+    suggestedAnswer: '추천 답변',
+
+    howItWorksTitle: 'AI 면접 연습 사용방법',
+    howItWorksSubtitle: 'AI 기반 연습 플랫폼으로 면접 실력을 향상시키세요',
+
+    step1Title: '면접 생성하기',
+    step1Description:
+      '직무, 희망하는 역할, 경력 수준을 선택하세요. AI가 귀하의 프로필에 맞는 면접 질문을 생성합니다.',
+
+    step2Title: '환경 설정하기',
+    step2Description:
+      '실제 면접과 같은 환경을 만들기 위해 웹캠과 마이크를 활성화하세요. 실제 면접처럼 바디랭귀지와 언어 표현을 연습하세요.',
+
+    step3Title: '질문 답변하기',
+    step3Description:
+      '선호하는 언어로 면접 질문에 자연스럽게 답변하세요. 음성 인식 기술이 답변을 정확하게 기록합니다.',
+
+    step4Title: 'AI 피드백 받기',
+    step4Description:
+      'AI로부터 답변에 대한 즉각적이고 상세한 피드백을 받으세요. 잘한 점과 개선할 점을 파악하세요.',
+
+    step5Title: '진행 상황 확인하기',
+    step5Description:
+      '면접 기록을 검토하고, 시간에 따른 향상도를 추적하며, 개선이 필요한 특정 영역을 연습하세요.',
+
+    readyToStart: '연습을 시작할 준비가 되셨나요?',
+    readyToStartDescription:
+      'AI 기반 연습 세션으로 성공적인 면접을 향한 여정을 시작하세요.',
+    startPracticing: '지금 연습 시작하기',
+
+    noInterviewsYet: '아직 면접이 없습니다',
+    createFirstInterview: '첫 면접을 생성하여 시작하세요',
   },
 };
 
