@@ -180,6 +180,14 @@ const translations = {
     commonFor: 'Common for Roles',
     questionSaved: 'Question saved to your collection',
     questionRemoved: 'Question removed from your collection',
+
+    microphonePermissionDenied:
+      'Microphone permission denied. Please allow access to record.',
+    browserNotSupported: 'Your browser does not support speech recognition.',
+    recordingError: 'Error occurred while recording. Please try again.',
+    processing: 'Processing...',
+    startRecording: 'Start Recording',
+    stopRecording: 'Stop Recording',
   },
   ko: {
     dashboard: '대시보드',
@@ -354,6 +362,14 @@ const translations = {
     commonFor: '일반적인 직무',
     questionSaved: '질문이 저장되었습니다',
     questionRemoved: '질문이 삭제되었습니다',
+
+    microphonePermissionDenied:
+      '마이크 권한이 거부되었습니다. 녹음을 위해 접근을 허용해주세요.',
+    browserNotSupported: '현재 브라우저에서 음성 인식을 지원하지 않습니다.',
+    recordingError: '녹음 중 오류가 발생했습니다. 다시 시도해주세요.',
+    processing: '처리 중...',
+    startRecording: '녹화 시작',
+    stopRecording: '멈추기',
   },
 };
 

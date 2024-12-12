@@ -36,6 +36,23 @@ function RecordAnswerSection({
 
   const [displayText, setDisplayText] = useState('');
 
+  const [hasPermission, setHasPermission] = useState(false);
+
+  // Function to request permissions
+  const requestPermissions = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Stop the stream immediately after getting permission
+      stream.getTracks().forEach((track) => track.stop());
+      setHasPermission(true);
+      return true;
+    } catch (err) {
+      console.error('Error getting permission:', err);
+      toast.error(t('microphonePermissionDenied'));
+      return false;
+    }
+  };
+
   const {
     error,
     interimResult,
@@ -97,19 +114,77 @@ function RecordAnswerSection({
     setUserAnswer('');
   };
 
+  // const startRecording = useCallback(async () => {
+  //   setUserAnswer('');
+  //   setResults([]);
+  //   try {
+  //     await startSpeechToText();
+  //     // Clear any existing timeout
+  //     if (transcriptionTimeout) {
+  //       clearTimeout(transcriptionTimeout);
+  //     }
+  //   } catch (err) {
+  //     toast.error(`Failed to start recording: ${err.message}`);
+  //   }
+  // }, [startSpeechToText, transcriptionTimeout]);
+
+  // Update the startRecording function
   const startRecording = useCallback(async () => {
-    setUserAnswer('');
-    setResults([]);
+    // Check if running on mobile Chrome
+    const isMobileChrome =
+      /Android|Mobile|iPhone/i.test(navigator.userAgent) &&
+      /Chrome/i.test(navigator.userAgent);
+
     try {
-      await startSpeechToText();
-      // Clear any existing timeout
+      // Always request permissions first
+      const permissionGranted = await requestPermissions();
+      if (!permissionGranted) return;
+
+      setUserAnswer('');
+      setResults([]);
+
+      // For mobile Chrome, we need to handle the recognition differently
+      if (isMobileChrome) {
+        // Create a new SpeechRecognition instance
+        const SpeechRecognition =
+          window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          toast.error(t('browserNotSupported'));
+          return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = selectedLanguage;
+
+        recognition.onresult = (event) => {
+          const transcript = Array.from(event.results)
+            .map((result) => result[0].transcript)
+            .join(' ');
+          setUserAnswer(transcript);
+          setDisplayText(transcript);
+        };
+
+        recognition.onerror = (event) => {
+          console.error('Speech recognition error:', event.error);
+          toast.error(t('recordingError'));
+        };
+
+        recognition.start();
+      } else {
+        // Use react-hook-speech-to-text for desktop browsers
+        await startSpeechToText();
+      }
+
       if (transcriptionTimeout) {
         clearTimeout(transcriptionTimeout);
       }
     } catch (err) {
-      toast.error(`Failed to start recording: ${err.message}`);
+      console.error('Recording error:', err);
+      toast.error(t('recordingError'));
     }
-  }, [startSpeechToText, transcriptionTimeout]);
+  }, [startSpeechToText, transcriptionTimeout, selectedLanguage]);
 
   const stopRecording = useCallback(async () => {
     try {
@@ -222,6 +297,29 @@ function RecordAnswerSection({
     }
   };
 
+  // Update button text
+  const ButtonText = () => {
+    if (loading) {
+      return <span className='flex items-center gap-2'>{t('processing')}</span>;
+    }
+
+    if (isRecording) {
+      return (
+        <span className='text-red-600 animate-pulse flex gap-2 items-center'>
+          <StopCircle />
+          {t('stopRecording')}
+        </span>
+      );
+    }
+
+    return (
+      <span className='text-primary flex gap-2 items-center'>
+        <Mic />
+        {t('startRecording')}
+      </span>
+    );
+  };
+
   return (
     <div className='flex items-center justify-center flex-col'>
       <div className='flex flex-col gap-4 w-full max-w-xl mb-6'>
@@ -266,7 +364,7 @@ function RecordAnswerSection({
         />
       </div>
 
-      <Button
+      {/* <Button
         disabled={loading}
         variant='outline'
         className='my-10'
@@ -283,8 +381,16 @@ function RecordAnswerSection({
             녹화 시작
           </span>
         )}
-      </Button>
+      </Button> */}
 
+      <Button
+        disabled={loading}
+        variant='outline'
+        className='my-10'
+        onClick={isRecording ? stopRecording : startRecording}
+      >
+        <ButtonText />
+      </Button>
       {/* {(interimResult || userAnswer) && (
         <div className='w-full max-w-xl p-4 bg-gray-50 rounded-lg'>
           <h4 className='font-medium mb-2'>{t('transcription')}</h4>
