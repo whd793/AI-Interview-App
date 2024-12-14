@@ -61,7 +61,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href='/privacy'
+                  href='/terms'
                   className='text-gray-600 hover:text-primary text-sm'
                 >
                   {t('privacyPolicy')}
@@ -69,7 +69,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href='/cookies'
+                  href='/terms'
                   className='text-gray-600 hover:text-primary text-sm'
                 >
                   {t('cookiePolicy')}

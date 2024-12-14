@@ -55,7 +55,8 @@ function Interview({ params }) {
               <strong>{t('information')}</strong>
             </h2>
             <h2 className='mt-3 text-yellow-500'>
-              {process.env.NEXT_PUBLIC_INFORMATION}
+              {/* {process.env.NEXT_PUBLIC_INFORMATION} */}
+              {t('startinterviewinfo')}
             </h2>
           </div>
         </div>

@@ -216,6 +216,8 @@ const translations = {
 
     questionnote:
       "Please allow audio usage in your phone or browser settings first. To respond, please press the 'Start Recording' button first.",
+    startinterviewinfo:
+      "Please allow access to your browser's webcam and microphone. You will be presented with 5 questions.",
   },
   ko: {
     dashboard: '대시보드',
@@ -426,6 +428,8 @@ const translations = {
 
     questionnote:
       "핸드폰이나 브라우저 설정에서 오디오 사용 허가를 먼저 해주세요. 답하시려면 '녹화 시작' 버튼을 먼저 눌러주세요",
+    startinterviewinfo:
+      '브라우저 웹캠과 오디오 사용 권한을 허락해주세요. 5개의 질문이 제공됩니다. ',
   },
 };
 
