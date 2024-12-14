@@ -199,6 +199,14 @@ const translations = {
     cookiePolicy: 'Cookie Policy',
     businessHours: 'Business Hours',
     allRightsReserved: 'All rights reserved',
+
+    recordingError: 'Error occurred while recording',
+    recordingStopError: 'Error stopping recording',
+    noAnswerRecorded: 'No answer recorded',
+    answerRecorded: 'Answer recorded successfully',
+    updateAnswerError: 'Failed to update answer',
+    noTranscriptYet: 'Transcript will appear here when you start speaking...',
+    selectLanguage: 'Select Language',
   },
   ko: {
     dashboard: '대시보드',
@@ -392,6 +400,14 @@ const translations = {
     cookiePolicy: '쿠키 정책',
     businessHours: '운영시간',
     allRightsReserved: '모든 권리 보유',
+
+    recordingError: '녹음 중 오류가 발생했습니다',
+    recordingStopError: '녹음 중지 중 오류가 발생했습니다',
+    noAnswerRecorded: '녹음된 답변이 없습니다',
+    answerRecorded: '답변이 성공적으로 저장되었습니다',
+    updateAnswerError: '답변 업데이트 실패',
+    noTranscriptYet: '말씀하시면 여기에 텍스트가 나타납니다...',
+    selectLanguage: '언어 선택',
   },
 };
 
