@@ -31,7 +31,7 @@ function Header() {
     { href: '/dashboard/questions', label: 'questions' },
     { href: '/dashboard/upgrade', label: 'upgrade' },
     { href: '/dashboard/analytics', label: 'analytics' },
-    { href: '/dashboard/how', label: 'howItWorks' },
+    { href: '/how', label: 'howItWorks' },
   ];
 
   useEffect(() => {

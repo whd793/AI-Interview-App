@@ -188,6 +188,17 @@ const translations = {
     processing: 'Processing...',
     startRecording: 'Start Recording',
     stopRecording: 'Stop Recording',
+
+    companyName: 'AI-Interview',
+    companyDescription:
+      'AI-powered interview practice platform to help you succeed in your career journey.',
+    quickLinks: 'Quick Links',
+    legal: 'Legal',
+    termsOfService: 'Terms of Service',
+    privacyPolicy: 'Privacy Policy',
+    cookiePolicy: 'Cookie Policy',
+    businessHours: 'Business Hours',
+    allRightsReserved: 'All rights reserved',
   },
   ko: {
     dashboard: '대시보드',
@@ -370,6 +381,17 @@ const translations = {
     processing: '처리 중...',
     startRecording: '녹화 시작',
     stopRecording: '멈추기',
+
+    companyName: 'AI-Interview',
+    companyDescription:
+      'AI 기반 면접 연습 플랫폼으로 여러분의 커리어 여정을 돕습니다.',
+    quickLinks: '빠른 링크',
+    legal: '법적 고지',
+    termsOfService: '이용약관',
+    privacyPolicy: '개인정보처리방침',
+    cookiePolicy: '쿠키 정책',
+    businessHours: '운영시간',
+    allRightsReserved: '모든 권리 보유',
   },
 };
 

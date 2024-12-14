@@ -3,6 +3,8 @@
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Header from './dashboard/_components/Header';
+import Footer from './dashboard/_components/Footer';
+
 // import { useLanguage } from '@/contexts/LanguageContext';
 import { useLanguage } from './providers/LanguageProvider';
 export default function Home() {
@@ -23,7 +25,7 @@ export default function Home() {
       <div className='relative z-10'>
         <Header />
         <section>
-          <div className='py-32 px-4 mx-auto max-w-screen-xl text-center lg:py-32 lg:px-12'>
+          <div className='pt-32 px-4 mx-auto max-w-screen-xl text-center lg:pt-32 lg:px-12'>
             <h1 className='mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl'>
               {t('title')}
             </h1>
@@ -51,7 +53,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <div className='px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36'>
+          <div className='px-4 mx-auto mb-20 text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36'>
             <span className='font-semibold text-gray-400 uppercase'>
               FEATURED IN
             </span>
@@ -158,6 +160,7 @@ export default function Home() {
               </a>
             </div>
           </div>
+          <Footer />
         </section>
       </div>
     </div>

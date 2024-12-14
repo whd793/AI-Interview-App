@@ -50,6 +50,7 @@ export default function RootLayout({ children }) {
         <LanguageProvider>
           <Providers>
             {children}
+
             <Toaster position='top-center' />
           </Providers>
         </LanguageProvider>
