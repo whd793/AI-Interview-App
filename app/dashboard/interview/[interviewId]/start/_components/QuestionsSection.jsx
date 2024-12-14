@@ -1,7 +1,10 @@
 import { Lightbulb, Volume2 } from 'lucide-react';
 import React from 'react';
+import { useLanguage } from '@/app/providers/LanguageProvider';
 
 function QuestionsSection({ mockInterviewQuestion, activeQuestionIndex }) {
+  const { t } = useLanguage();
+
   const textToSpeach = (text) => {
     if ('speechSynthesis' in window) {
       const speech = new SpeechSynthesisUtterance(text);
@@ -41,7 +44,8 @@ function QuestionsSection({ mockInterviewQuestion, activeQuestionIndex }) {
             <strong>Note:</strong>
           </h2>
           <h2 className='text-sm text-primary my-2'>
-            {process.env.NEXT_PUBLIC_QUESTION_NOTE}
+            {/* {process.env.NEXT_PUBLIC_QUESTION_NOTE} */}
+            {t('questionnote')}
           </h2>
         </div>
       </div>

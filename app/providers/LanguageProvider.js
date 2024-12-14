@@ -213,6 +213,9 @@ const translations = {
     noTranscriptYet: 'Start speaking to see transcription...',
     noAnswerYet: 'No answer submitted yet for this question',
     submitted: 'Submitted',
+
+    questionnote:
+      "Please allow audio usage in your phone or browser settings first. To respond, please press the 'Start Recording' button first.",
   },
   ko: {
     dashboard: '대시보드',
@@ -420,6 +423,9 @@ const translations = {
     noTranscriptYet: '말씀하시면 텍스트가 표시됩니다...',
     noAnswerYet: '이 질문에 대한 제출된 답변이 없습니다',
     submitted: '제출됨',
+
+    questionnote:
+      "핸드폰이나 브라우저 설정에서 오디오 사용 허가를 먼저 해주세요. 답하시려면 '녹화 시작' 버튼을 먼저 눌러주세요",
   },
 };
 
