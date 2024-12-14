@@ -207,6 +207,12 @@ const translations = {
     updateAnswerError: 'Failed to update answer',
     noTranscriptYet: 'Transcript will appear here when you start speaking...',
     selectLanguage: 'Select Language',
+
+    currentTranscription: 'Current Transcription',
+    finalAnswer: 'Final Answer',
+    noTranscriptYet: 'Start speaking to see transcription...',
+    noAnswerYet: 'No answer submitted yet for this question',
+    submitted: 'Submitted',
   },
   ko: {
     dashboard: '대시보드',
@@ -408,6 +414,12 @@ const translations = {
     updateAnswerError: '답변 업데이트 실패',
     noTranscriptYet: '말씀하시면 여기에 텍스트가 나타납니다...',
     selectLanguage: '언어 선택',
+
+    currentTranscription: '현재 답변',
+    finalAnswer: '최종 답변',
+    noTranscriptYet: '말씀하시면 텍스트가 표시됩니다...',
+    noAnswerYet: '이 질문에 대한 제출된 답변이 없습니다',
+    submitted: '제출됨',
   },
 };
 
