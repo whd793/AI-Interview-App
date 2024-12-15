@@ -22,10 +22,42 @@ export default function Footer() {
             <ul className='space-y-2'>
               <li>
                 <Link
+                  href='/'
+                  className='text-gray-600 hover:text-primary text-sm'
+                >
+                  {t('home')}
+                </Link>
+              </li>
+              <li>
+                <Link
                   href='/dashboard'
                   className='text-gray-600 hover:text-primary text-sm'
                 >
                   {t('dashboard')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='/dashboard/questions'
+                  className='text-gray-600 hover:text-primary text-sm'
+                >
+                  {t('questions')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='/dashboard/upgrade'
+                  className='text-gray-600 hover:text-primary text-sm'
+                >
+                  {t('upgrade')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href='/dashboard/analytics'
+                  className='text-gray-600 hover:text-primary text-sm'
+                >
+                  {t('analytics')}
                 </Link>
               </li>
               <li>

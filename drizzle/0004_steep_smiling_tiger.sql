@@ -1,0 +1,1 @@
+ALTER TABLE "userCredits" DROP COLUMN IF EXISTS "processing";

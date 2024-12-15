@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import React, { useEffect } from 'react';
 import { useLanguage } from '../../providers/LanguageProvider';
 import { Menu, Globe, X } from 'lucide-react';
-import Credits from './Credits';
+// import Credits from './Credits';
 
 import {
   Select,
@@ -24,15 +24,23 @@ import {
   SheetClose,
 } from '@/components/ui/sheet';
 
+import { BrainCircuit } from 'lucide-react';
+
+import { Inter, Outfit, Work_Sans } from 'next/font/google';
+
+const outfit = Outfit({ subsets: ['latin'] });
+const workSans = Work_Sans({ subsets: ['latin'] });
+
 function Header() {
   const path = usePathname();
   const { t, language, setLanguage } = useLanguage();
 
   const menuItems = [
+    { href: '/', label: 'home' },
     { href: '/dashboard', label: 'dashboard' },
-    { href: '/dashboard/questions', label: 'questions' },
-    { href: '/dashboard/upgrade', label: 'upgrade' },
-    { href: '/dashboard/analytics', label: 'analytics' },
+    // { href: '/dashboard/questions', label: 'questions' },
+    // { href: '/dashboard/upgrade', label: 'upgrade' },
+    // { href: '/dashboard/analytics', label: 'analytics' },
     { href: '/how', label: 'howItWorks' },
   ];
 
@@ -288,71 +296,207 @@ function Header() {
   //   </div>
   // );
   // Header.jsx
-  return (
-    <div className='flex p-4 items-center justify-between bg-secondary shadow-sm'>
-      <Link href={'/'}>
-        <h1 className='text-primary font-bold cursor-pointer'>
-          InterviewHelp AI
-        </h1>
-      </Link>
 
-      {/* Desktop Navigation */}
-      <ul className='hidden md:flex gap-6 items-center'>
-        <NavLinks />
-        <Select value={language} onValueChange={setLanguage}>
-          <SelectTrigger className='w-[110px]'>
-            <Globe className='mr-2 h-4 w-4' />
-            <SelectValue>
-              {language === 'ko' ? '한국어' : 'English'}
-            </SelectValue>
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='en'>
-              <div className='flex items-center'>
-                <span className='ml-2'>English</span>
+  return (
+    <div className='flex p-4 items-center bg-secondary shadow-sm'>
+      {/* Logo - with min-width to prevent squishing */}
+      <div className='flex-shrink-0'>
+        <Link href={'/'}>
+          <h1
+            className={`font-bold whitespace-nowrap transition-all duration-300 overflow-hidden
+   'w-auto opacity-100'}
+    ${outfit.className} text-2xl flex items-center gap-2`}
+          >
+            <BrainCircuit className='w-8 h-8 text-primary' />
+            <div className='flex flex-col'>
+              <div className='flex items-center gap-1'>
+                <span className='text-primary'>Interview</span>
+                <span className='text-gray-600'>AI</span>
               </div>
-            </SelectItem>
-            <SelectItem value='ko'>
-              <div className='flex items-center'>
-                <span className='ml-2'>한국어</span>
-              </div>
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <Credits />
-      </ul>
+              <span className='text-xs text-gray-500 -mt-1'>{t('mock')}</span>
+            </div>
+          </h1>
+        </Link>
+      </div>
+
+      {/* Desktop Navigation - with overflow handling */}
+      <div className='hidden md:flex items-center justify-end flex-1 min-w-0'>
+        {/* Navigation Links - with horizontal scroll if needed */}
+        <nav className='mr-8 overflow-x-auto'>
+          <ul className='flex items-center space-x-8'>
+            {menuItems.map((item) => (
+              <li key={item.href} className='flex-shrink-0'>
+                <Link
+                  href={item.href}
+                  className={`py-2 inline-block transition-colors hover:text-primary
+                    ${
+                      path === item.href
+                        ? 'text-primary font-semibold'
+                        : 'text-gray-600'
+                    }`}
+                >
+                  {t(item.label)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Right side items - with flex-shrink-0 to prevent squishing */}
+        <div className='flex items-center gap-4 pl-4 border-l border-gray-200 flex-shrink-0'>
+          <Select value={language} onValueChange={setLanguage}>
+            <SelectTrigger className='w-[110px]'>
+              <Globe className='mr-2 h-4 w-4' />
+              <SelectValue>
+                {language === 'ko' ? '한국어' : 'English'}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='en'>English</SelectItem>
+              <SelectItem value='ko'>한국어</SelectItem>
+            </SelectContent>
+          </Select>
+          <UserButton afterSignOutUrl='/' />
+        </div>
+      </div>
 
       {/* Mobile Navigation */}
-      <div className='md:hidden flex items-center gap-4'>
+      <div className='md:hidden flex items-center gap-4 ml-auto flex-shrink-0'>
         <Sheet>
           <SheetTrigger asChild>
-            <button className='p-2 hover:bg-gray-100 rounded-lg'>
+            <button className='p-2 hover:bg-gray-100 rounded-lg transition-colors'>
               <Menu className='h-6 w-6' />
             </button>
           </SheetTrigger>
           <SheetContent side='right' className='w-[300px] sm:w-[400px]'>
-            <div className='flex justify-between items-center mb-6'>
-              <h2 className='text-lg font-semibold'>Menu</h2>
+            <div className='flex flex-col h-full'>
+              <div className='flex items-center justify-between py-4 mb-4 border-b'>
+                <h2 className={`${outfit.className} text-lg font-semibold`}>
+                  Menu
+                </h2>
+              </div>
+              <nav className='flex-1'>
+                <ul className='space-y-1'>
+                  {menuItems.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={() =>
+                          document.querySelector('[data-sheet-close]').click()
+                        }
+                        className={`flex items-center py-4 px-2 rounded-lg transition-colors
+                          ${
+                            path === item.href
+                              ? 'text-primary font-semibold bg-primary/5'
+                              : 'text-gray-600 hover:bg-gray-50'
+                          }`}
+                      >
+                        {t(item.label)}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+              <div className='mt-auto pt-4 border-t'>
+                <Select value={language} onValueChange={setLanguage}>
+                  <SelectTrigger className='w-full'>
+                    <Globe className='mr-2 h-4 w-4' />
+                    <SelectValue>
+                      {language === 'ko' ? '한국어' : 'English'}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='en'>English</SelectItem>
+                    <SelectItem value='ko'>한국어</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <ul className='flex flex-col'>
-              <NavLinks
-                mobile
-                onItemClick={() =>
-                  document.querySelector('[data-sheet-close]').click()
-                }
-              />
-            </ul>
           </SheetContent>
         </Sheet>
-        <UserButton />
-      </div>
-
-      {/* Desktop UserButton */}
-      <div className='hidden md:flex items-center gap-4'>
-        <UserButton />
+        <UserButton afterSignOutUrl='/' />
       </div>
     </div>
   );
+  // return (
+  //   <div className='flex p-4 items-center justify-between bg-secondary shadow-sm'>
+  //     <Link href={'/'}>
+  //       {/* <h1 className='text-primary font-bold cursor-pointer'>
+  //         InterviewHelp AI
+  //       </h1> */}
+  //       <h1
+  //         className={`font-bold whitespace-nowrap transition-all duration-300 overflow-hidden
+  //  w-auto opacity-100'}
+  //   ${outfit.className} text-2xl flex items-center gap-2`}
+  //       >
+  //         <BrainCircuit className='w-8 h-8 text-primary' />
+  //         <div className='flex flex-col'>
+  //           <div className='flex items-center gap-1'>
+  //             <span className='text-primary'>Interview</span>
+  //             <span className='text-gray-600'>AI</span>
+  //           </div>
+  //           <span className='text-xs text-gray-500 -mt-1'>Powered by AI</span>
+  //         </div>
+  //       </h1>
+  //     </Link>
+
+  //     {/* Desktop Navigation */}
+  //     <ul className='hidden md:flex gap-6 items-center'>
+  //       <NavLinks />
+  //       <Select value={language} onValueChange={setLanguage}>
+  //         <SelectTrigger className='w-[110px]'>
+  //           <Globe className='mr-2 h-4 w-4' />
+  //           <SelectValue>
+  //             {language === 'ko' ? '한국어' : 'English'}
+  //           </SelectValue>
+  //         </SelectTrigger>
+  //         <SelectContent>
+  //           <SelectItem value='en'>
+  //             <div className='flex items-center'>
+  //               <span className='ml-2'>English</span>
+  //             </div>
+  //           </SelectItem>
+  //           <SelectItem value='ko'>
+  //             <div className='flex items-center'>
+  //               <span className='ml-2'>한국어</span>
+  //             </div>
+  //           </SelectItem>
+  //         </SelectContent>
+  //       </Select>
+  //       {/* <Credits /> */}
+  //     </ul>
+
+  //     {/* Mobile Navigation */}
+  //     <div className='md:hidden flex items-center gap-4'>
+  //       <Sheet>
+  //         <SheetTrigger asChild>
+  //           <button className='p-2 hover:bg-gray-100 rounded-lg'>
+  //             <Menu className='h-6 w-6' />
+  //           </button>
+  //         </SheetTrigger>
+  //         <SheetContent side='right' className='w-[300px] sm:w-[400px]'>
+  //           <div className='flex justify-between items-center mb-6'>
+  //             <h2 className='text-lg font-semibold'>Menu</h2>
+  //           </div>
+  //           <ul className='flex flex-col'>
+  //             <NavLinks
+  //               mobile
+  //               onItemClick={() =>
+  //                 document.querySelector('[data-sheet-close]').click()
+  //               }
+  //             />
+  //           </ul>
+  //         </SheetContent>
+  //       </Sheet>
+  //       <UserButton />
+  //     </div>
+
+  //     {/* Desktop UserButton */}
+  //     <div className='hidden md:flex items-center gap-4'>
+  //       <UserButton />
+  //     </div>
+  //   </div>
+  // );
 }
 
 export default Header;

@@ -8,6 +8,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from '@/components/ui/alert-dialog';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,6 +39,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 import { useLanguage } from '@/app/providers/LanguageProvider';
 function AddNewInterview() {
@@ -45,6 +57,10 @@ function AddNewInterview() {
   );
   const router = useRouter();
   const { user } = useUser();
+
+  // Add these state variables at the top of your component
+  const [showNoCreditsDialog, setShowNoCreditsDialog] = useState(false);
+  const [timeLeft, setTimeLeft] = useState('');
 
   const languages = [
     {
@@ -74,27 +90,65 @@ function AddNewInterview() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Check credits first
-    const userCredits = await db
+    // Check and create credits if needed
+    let userCredits = await db
       .select()
       .from(UserCredits)
       .where(
         eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
       );
 
+    if (!userCredits.length) {
+      // First time user - create credits
+      await db.insert(UserCredits).values({
+        userEmail: user.primaryEmailAddress.emailAddress,
+        credits: 5,
+        lastUpdated: new Date(),
+      });
+      userCredits = [{ credits: 5 }];
+    }
+
     // if (!userCredits.length || userCredits[0].credits <= 0) {
-    //   toast.error(t('noCredits'));
+    //   toast.error(
+    //     <div className='flex flex-col gap-2'>
+    //       <span>{t('noCredits')}</span>
+    //       <span className='text-sm text-gray-500'>{t('waitForCredits')}</span>
+    //     </div>
+    //   );
+    //   setOpenDialog(false);
     //   return;
     // }
 
     if (!userCredits.length || userCredits[0].credits <= 0) {
-      toast.error(
-        <div className='flex flex-col gap-2'>
-          <span>{t('noCredits')}</span>
-          <span className='text-sm text-gray-500'>{t('waitForCredits')}</span>
-        </div>
-      );
+      setShowNoCreditsDialog(true);
       setOpenDialog(false);
+      return;
+    }
+
+    // Update the credits check in onSubmit
+    if (!userCredits.length || userCredits[0].credits <= 0) {
+      // Get time left from UserCredits
+      const currentCredits = await db
+        .select()
+        .from(UserCredits)
+        .where(
+          eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
+        );
+
+      // Calculate time left
+      if (currentCredits[0]?.lastUpdated) {
+        const now = moment();
+        const nextUpdate = moment(currentCredits[0].lastUpdated).add(
+          1,
+          'minute'
+        );
+        const duration = moment.duration(nextUpdate.diff(now));
+        setTimeLeft(
+          `${duration.minutes()}:${String(duration.seconds()).padStart(2, '0')}`
+        );
+      }
+
+      setShowNoCreditsDialog(true);
       return;
     }
 
@@ -130,6 +184,19 @@ function AddNewInterview() {
       console.log('Generated response:', JSON.parse(MockJsonResp));
       setJsonResponse(MockJsonResp);
 
+      // Check credits again before saving - get the latest count
+      const currentCredits = await db
+        .select()
+        .from(UserCredits)
+        .where(
+          eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
+        );
+
+      if (!currentCredits.length || currentCredits[0].credits <= 0) {
+        toast.error(t('noCredits'));
+        return;
+      }
+
       const resp = await db
         .insert(MockInterview)
         .values({
@@ -144,12 +211,12 @@ function AddNewInterview() {
         })
         .returning({ mockId: MockInterview.mockId });
 
-      // Deduct credit after successful creation
+      // Deduct credit but don't update lastUpdated
       await db
         .update(UserCredits)
         .set({
-          credits: userCredits[0].credits - 1,
-          // lastUpdated: new Date(),
+          // credits: userCredits[0].credits - 1,
+          credits: currentCredits[0].credits - 1,
         })
         .where(
           eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
@@ -161,11 +228,109 @@ function AddNewInterview() {
       }
     } catch (error) {
       console.error('Error generating interview:', error);
-      // You might want to show an error toast here
+      toast.error(t('errorGenerating'));
     } finally {
       setLoading(false);
     }
   };
+  // const onSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   // Check credits first
+  //   const userCredits = await db
+  //     .select()
+  //     .from(UserCredits)
+  //     .where(
+  //       eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
+  //     );
+
+  //   // if (!userCredits.length || userCredits[0].credits <= 0) {
+  //   //   toast.error(t('noCredits'));
+  //   //   return;
+  //   // }
+
+  //   if (!userCredits.length || userCredits[0].credits <= 0) {
+  //     toast.error(
+  //       <div className='flex flex-col gap-2'>
+  //         <span>{t('noCredits')}</span>
+  //         <span className='text-sm text-gray-500'>{t('waitForCredits')}</span>
+  //       </div>
+  //     );
+  //     setOpenDialog(false);
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   const selectedLangPrompt =
+  //     languages.find((lang) => lang.code === selectedLanguage)?.prompt ||
+  //     'Generate in English';
+
+  //   const InputPrompt = `
+  //     Job position: ${jobPosition}
+  //     Job Description: ${jobDesc}
+  //     Years of Experience: ${jobExperience}
+
+  //     Based on the above job details, please provide ${
+  //       process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT
+  //     } interview questions and answers.
+  //     ${selectedLangPrompt}.
+
+  //     Return the response in JSON format with 'question' and 'answer' fields for each item.
+  //     Keep the JSON structure but generate content in ${
+  //       languages.find((lang) => lang.code === selectedLanguage)?.name
+  //     }.
+  //   `;
+
+  //   try {
+  //     const result = await chatSession.sendMessage(InputPrompt);
+  //     const MockJsonResp = result.response
+  //       .text()
+  //       .replace('```json', '')
+  //       .replace('```', '')
+  //       .trim();
+
+  //     console.log('Generated response:', JSON.parse(MockJsonResp));
+  //     setJsonResponse(MockJsonResp);
+
+  //     const resp = await db
+  //       .insert(MockInterview)
+  //       .values({
+  //         mockId: uuidv4(),
+  //         jsonMockResp: MockJsonResp,
+  //         jobPosition: jobPosition,
+  //         jobDesc: jobDesc,
+  //         jobExperience: jobExperience,
+  //         language: selectedLanguage,
+  //         createdBy: user?.primaryEmailAddress?.emailAddress,
+  //         createdAt: moment().format('DD-MM-yyyy'),
+  //       })
+  //       .returning({ mockId: MockInterview.mockId });
+
+  //     // Deduct credit after successful creation
+  //     await db
+  //       .update(UserCredits)
+  //       .set({
+  //         credits: userCredits[0].credits - 1,
+  //         // lastUpdated: moment().toDate(), // Add this line to update the timestamp
+
+  //         // lastUpdated: new Date(),
+  //       })
+  //       .where(
+  //         eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
+  //       );
+
+  //     if (resp?.[0]?.mockId) {
+  //       setOpenDialog(false);
+  //       router.push('/dashboard/interview/' + resp[0].mockId);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error generating interview:', error);
+  //     // You might want to show an error toast here
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   return (
     <div>
       <div
@@ -176,7 +341,7 @@ function AddNewInterview() {
       </div>
 
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent className='max-w-2xl'>
+        <DialogContent className='max-w-xl'>
           <DialogHeader>
             <DialogTitle className='text-2xl'>{t('tellMore')}</DialogTitle>
             <DialogDescription>
@@ -263,6 +428,38 @@ function AddNewInterview() {
                 </div>
               </form>
             </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showNoCreditsDialog} onOpenChange={setShowNoCreditsDialog}>
+        <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>{t('noCredits')}</DialogTitle>
+            <DialogDescription>
+              <p>{t('waitForCredits')}</p>
+            </DialogDescription>
+            {/* <Button
+              onClick={() => setShowNoCreditsDialog(false)}
+              className='mt-4'
+            >
+              {t('close')}
+            </Button> */}
+            <div className='flex gap-4 justify-end'>
+              {/* <Button
+                type='button'
+                variant='ghost'
+                onClick={() => setOpenDialog(false)}
+              >
+                {t('cancel')}
+              </Button> */}
+              <Button
+                onClick={() => setShowNoCreditsDialog(false)}
+                className='mt-4'
+              >
+                {t('close')}
+              </Button>
+            </div>
           </DialogHeader>
         </DialogContent>
       </Dialog>

@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 const translations = {
   en: {
+    mock: 'AI Mock Interview Practice',
+    home: 'Home',
     dashboard: 'Dashboard',
     analytics: 'Analytics',
     createInterview: 'Create and Start your AI Mockup Interview',
@@ -223,8 +225,12 @@ const translations = {
     nextCredit: 'Next Credit In',
     noCredits: 'No credits available',
     waitForCredits: 'Please wait for credits to refresh',
+
+    close: 'Close',
   },
   ko: {
+    mock: 'AI 모의 면접 연습',
+    home: '홈',
     dashboard: '대시보드',
     analytics: '분석',
     createInterview: '새로운 면접을 만들어보세요',
@@ -301,7 +307,7 @@ const translations = {
     failedRecord: '답변 저장에 실패했습니다',
 
     // Home Page
-    title: 'AI 취업 면접 연습 도우미',
+    title: 'AI 모의 면접 연습 & 피드백 ',
     subtitle: 'AI 면접으로 연습해서 취업률을 높여보세요!',
     getStarted: '시작하기',
 
@@ -439,6 +445,8 @@ const translations = {
     nextCredit: '다음 크레딧까지',
     noCredits: '크레딧이 없습니다',
     waitForCredits: '크레딧이 충전될 때까지 기다려주세요',
+
+    close: '닫기',
   },
 };
 

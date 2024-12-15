@@ -4,10 +4,23 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Header from './dashboard/_components/Header';
 import Footer from './dashboard/_components/Footer';
-import { Lightbulb, Video, Mic, Brain, BarChart } from 'lucide-react';
+import {
+  Lightbulb,
+  Video,
+  Mic,
+  Brain,
+  BarChart,
+  BrainCircuit,
+  ArrowRight,
+} from 'lucide-react';
+import { Inter, Outfit, Work_Sans } from 'next/font/google';
 
 // import { useLanguage } from '@/contexts/LanguageContext';
 import { useLanguage } from './providers/LanguageProvider';
+
+const outfit = Outfit({ subsets: ['latin'] });
+const workSans = Work_Sans({ subsets: ['latin'] });
+
 export default function Home() {
   const { t } = useLanguage();
 
@@ -46,7 +59,7 @@ export default function Home() {
         <img
           alt=''
           src='/images/inv.jpg'
-          className='h-full w-full object-cover brightness-[40%]'
+          className='h-full w-full object-cover brightness-[35%]'
         />
       </div>
 
@@ -55,13 +68,24 @@ export default function Home() {
         <Header />
         <section>
           <div className='pt-32 px-4 mx-auto max-w-screen-xl text-center lg:pt-32 lg:px-12'>
-            <h1 className='mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl'>
+            <div className='flex justify-center mb-8'>
+              <BrainCircuit className='w-20 h-20 text-primary animate-pulse' />
+            </div>
+            {/* <h1 className='mb-4 text-4xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl'>
               {t('title')}
             </h1>
             <p className='mb-8 text-lg font-normal text-gray-100 lg:text-xl sm:px-16 xl:px-48'>
               {t('subtitle')}
+            </p> */}
+            <h1
+              className={`mb-6 text-5xl font-extrabold tracking-tight leading-none text-white md:text-6xl lg:text-7xl ${outfit.className}`}
+            >
+              {t('title')}
+            </h1>
+            <p className='mb-12 text-lg font-normal text-gray-300 lg:text-xl max-w-3xl mx-auto'>
+              {t('subtitle')}
             </p>
-            <div className='flex mb-8 lg:mb-16 space-y-4 flex-row justify-center space-x-4'>
+            {/* <div className='flex mb-8 lg:mb-16 space-y-4 flex-row justify-center space-x-4'>
               <a
                 href='/dashboard'
                 className='inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary hover:bg-primary hover:ring-4 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900'
@@ -79,6 +103,15 @@ export default function Home() {
                     clipRule='evenodd'
                   />
                 </svg>
+              </a>
+            </div> */}
+            <div className='flex justify-center mb-20'>
+              <a
+                href='/dashboard'
+                className='group inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-all hover:gap-4'
+              >
+                {t('getStarted')}
+                <ArrowRight className='w-5 h-5 transition-all group-hover:translate-x-1' />
               </a>
             </div>
           </div>
@@ -225,11 +258,19 @@ export default function Home() {
                 <p className='text-gray-600 mb-6'>
                   {t('readyToStartDescription')}
                 </p>
-                <a
+                {/* <a
                   href='/dashboard'
                   className='inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors'
                 >
                   {t('startPracticing')}
+                </a> */}
+
+                <a
+                  href='/dashboard'
+                  className='group inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary/90 transition-all hover:gap-4'
+                >
+                  {t('startPracticing')}
+                  <ArrowRight className='w-5 h-5 transition-all group-hover:translate-x-1' />
                 </a>
               </div>
             </div>

@@ -5,7 +5,10 @@ export default [
     cost: 0,
     offering: [
       {
-        value: '✔️ Create 3 Free Mock Interview Per Day',
+        value: '✔️ Create 5 Free Mock Interview Per Day ',
+      },
+      {
+        value: '✔️ New Credit Every 3 hours ',
       },
       {
         value: '✔️ Unlimited Retake Interview',
@@ -26,7 +29,10 @@ export default [
     paymentLink: 'https://buy.stripe.com/test_28o9EjbkvgfQ8VOeUV',
     offering: [
       {
-        value: '✔️ Create 10 Free Mock Interview Per Day',
+        value: '✔️ Create 20 Free Mock Interview Per Day',
+      },
+      {
+        value: '✔️ New Credit Every 3 hours ',
       },
       {
         value: '✔️ Unlimited Retake Interview',

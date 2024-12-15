@@ -13,6 +13,7 @@
 
 // export default DashboardLayout;
 
+// app/dashboard/layout.jsx
 'use client';
 import React from 'react';
 
@@ -42,6 +43,12 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { BrainCircuit } from 'lucide-react';
+
+import { Inter, Outfit, Work_Sans } from 'next/font/google';
+
+const outfit = Outfit({ subsets: ['latin'] });
+const workSans = Work_Sans({ subsets: ['latin'] });
 
 const DashboardLayout = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -76,16 +83,93 @@ const DashboardLayout = ({ children }) => {
     },
   ];
 
+  // const SidebarContent = ({ mobile = false }) => (
+  //   <div className='flex flex-col h-full'>
+  //     <div className='p-6 flex items-center justify-between'>
+  //       <Link href='/'>
+  //         <h1
+  //           className={`text-xl font-bold ${
+  //             !isSidebarOpen && !mobile ? 'hidden' : ''
+  //           }`}
+  //         >
+  //           InterviewHelp AI
+  //         </h1>
+  //       </Link>
+  //       {!mobile && (
+  //         <button
+  //           onClick={() => setSidebarOpen(!isSidebarOpen)}
+  //           className='p-2 rounded-lg hover:bg-gray-100'
+  //         >
+  //           {isSidebarOpen ? <ChevronLeft /> : <ChevronRight />}
+  //         </button>
+  //       )}
+  //     </div>
+
+  //     <nav className='flex-1'>
+  //       <ul className='space-y-1 px-4'>
+  //         {menuItems.map((item) => (
+  //           <li key={item.href}>
+  //             <Link
+  //               href={item.href}
+  //               className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+  //                 ${
+  //                   pathname === item.href
+  //                     ? 'bg-primary text-white'
+  //                     : 'hover:bg-gray-100'
+  //                 }`}
+  //             >
+  //               {item.icon}
+  //               {(isSidebarOpen || mobile) && <span>{t(item.label)}</span>}
+  //             </Link>
+  //           </li>
+  //         ))}
+  //       </ul>
+  //     </nav>
+
+  //     {mobile && (
+  //       <div className='p-4 border-t'>
+  //         <Select value={language} onValueChange={setLanguage}>
+  //           <SelectTrigger className='w-full'>
+  //             <Globe className='w-4 h-4 mr-2' />
+  //             <SelectValue>
+  //               {language === 'ko' ? '한국어' : 'English'}
+  //             </SelectValue>
+  //           </SelectTrigger>
+  //           <SelectContent>
+  //             <SelectItem value='en'>English</SelectItem>
+  //             <SelectItem value='ko'>한국어</SelectItem>
+  //           </SelectContent>
+  //         </Select>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
+
   const SidebarContent = ({ mobile = false }) => (
     <div className='flex flex-col h-full'>
       <div className='p-6 flex items-center justify-between'>
         <Link href='/'>
-          <h1
-            className={`text-xl font-bold ${
-              !isSidebarOpen && !mobile ? 'hidden' : ''
+          {/* <h1
+            className={`text-xl font-bold whitespace-nowrap transition-all duration-300 overflow-hidden
+            ${
+              !isSidebarOpen && !mobile ? 'w-0 opacity-0' : 'w-auto opacity-100'
             }`}
           >
             InterviewHelp AI
+          </h1> */}
+          <h1
+            className={`font-bold whitespace-nowrap transition-all duration-300 overflow-hidden
+    ${!isSidebarOpen && !mobile ? 'w-0 opacity-0' : 'w-auto opacity-100'}
+    ${outfit.className} text-2xl flex items-center gap-2`}
+          >
+            <BrainCircuit className='w-8 h-8 text-primary' />
+            <div className='flex flex-col'>
+              <div className='flex items-center gap-1'>
+                <span className='text-primary'>Interview</span>
+                <span className='text-gray-600'>AI</span>
+              </div>
+              <span className='text-xs text-gray-500 -mt-1'>{t('mock')}</span>
+            </div>
           </h1>
         </Link>
         {!mobile && (
@@ -104,15 +188,21 @@ const DashboardLayout = ({ children }) => {
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
-                  ${
-                    pathname === item.href
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-gray-100'
-                  }`}
+                className={`flex items-center ${
+                  !isSidebarOpen && !mobile ? 'justify-center' : 'justify-start'
+                } 
+    gap-3 px-4 py-3 rounded-lg transition-colors
+    ${pathname === item.href ? 'bg-primary text-white' : 'hover:bg-gray-100'}`}
               >
-                {item.icon}
-                {(isSidebarOpen || mobile) && <span>{t(item.label)}</span>}
+                {React.cloneElement(item.icon, {
+                  className: 'w-6 h-6', // Fixed size for icons
+                })}
+                <span
+                  className={`whitespace-nowrap transition-all duration-300 overflow-hidden
+      ${!isSidebarOpen && !mobile ? 'w-0 opacity-0' : 'w-auto opacity-100'}`}
+                >
+                  {t(item.label)}
+                </span>
               </Link>
             </li>
           ))}
@@ -143,7 +233,7 @@ const DashboardLayout = ({ children }) => {
       {/* Desktop Sidebar */}
       <aside
         className={`hidden md:block fixed top-0 left-0 h-screen border-r bg-white transition-all duration-300
-          ${isSidebarOpen ? 'w-64' : 'w-20'}`}
+    ${isSidebarOpen ? 'w-64' : 'w-24'}`} // Changed from w-20 to w-24
       >
         <SidebarContent />
       </aside>
@@ -151,7 +241,7 @@ const DashboardLayout = ({ children }) => {
       {/* Main Content */}
       <div
         className={`flex-1 transition-all duration-300 ${
-          isSidebarOpen ? 'md:ml-64' : 'md:ml-20'
+          isSidebarOpen ? 'md:ml-64' : 'md:ml-24' // Changed from md:ml-20 to md:ml-24
         }`}
       >
         {/* Top Header */}
@@ -167,13 +257,39 @@ const DashboardLayout = ({ children }) => {
               <SidebarContent mobile />
             </SheetContent>
           </Sheet>
-
-          <div className='md:hidden'>
+          {/* <div className='md:hidden'>
             <Link href='/'>
               <h1 className='text-lg font-semibold'>InterviewHelp AI</h1>
             </Link>
+          </div> */}
+          <div className='md:hidden'>
+            <Link href='/'>
+              <div className='flex flex-col'>
+                {/* <h1
+                  className={`${outfit.className} text-xl font-semibold flex items-center gap-1`}
+                >
+                  <span className='text-primary'>Interview</span>
+                  <span className='text-gray-600'>AI</span>
+                </h1> */}
+                <h1
+                  className={`font-bold whitespace-nowrap transition-all duration-300 overflow-hidden
+   'w-auto opacity-100'}
+    ${outfit.className} text-2xl flex items-center gap-2`}
+                >
+                  {/* <BrainCircuit className='w-8 h-8 text-primary' /> */}
+                  <div className='flex flex-col'>
+                    <div className='flex items-center gap-1'>
+                      <span className='text-primary'>Interview</span>
+                      <span className='text-gray-600'>AI</span>
+                    </div>
+                    <span className='text-xs text-gray-500 -mt-1'>
+                      {t('mock')}
+                    </span>
+                  </div>
+                </h1>
+              </div>
+            </Link>
           </div>
-
           <div className='flex items-center gap-4 ml-auto'>
             <div className='hidden md:block'>
               <Select value={language} onValueChange={setLanguage}>
@@ -199,6 +315,7 @@ const DashboardLayout = ({ children }) => {
         <main className='bg-gray-50 p-6 min-h-[calc(100vh-4rem)]'>
           {children}
         </main>
+        <Footer />
       </div>
     </div>
   );
