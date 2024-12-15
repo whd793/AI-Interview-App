@@ -29,15 +29,28 @@ function PlanItemCard({ plan }) {
           </li>
         ))}
       </ul>
-
-      <a
+      {plan.name == 'Monthly' ? (
+        <h2 className='mt-8 block rounded-full border border-red-600 bg-white px-12 py-3 text-center text-sm font-medium text-red-600 '>
+          Coming Soon..
+        </h2>
+      ) : (
+        <a
+          // href={plan.paymentLink+'?prefilled_email='+user?.primaryEmailAddress.emailAddress}
+          href={'/dashboard'}
+          target='_blank'
+          className='mt-8 block rounded-full border border-indigo-600 bg-white px-12 py-3 text-center text-sm font-medium text-indigo-600 hover:ring-1 hover:ring-indigo-600 focus:outline-none focus:ring active:text-indigo-500'
+        >
+          Get Started
+        </a>
+      )}
+      {/* <a
         // href={plan.paymentLink+'?prefilled_email='+user?.primaryEmailAddress.emailAddress}
         href={''}
         target='_blank'
         className='mt-8 block rounded-full border border-indigo-600 bg-white px-12 py-3 text-center text-sm font-medium text-indigo-600 hover:ring-1 hover:ring-indigo-600 focus:outline-none focus:ring active:text-indigo-500'
       >
         Get Started
-      </a>
+      </a> */}
     </div>
   );
 }
