@@ -262,21 +262,15 @@ const DashboardLayout = ({ children }) => {
               <h1 className='text-lg font-semibold'>InterviewHelp AI</h1>
             </Link>
           </div> */}
-          <div className='md:hidden'>
+          {/* <div className='md:hidden'>
             <Link href='/'>
               <div className='flex flex-col'>
-                {/* <h1
-                  className={`${outfit.className} text-xl font-semibold flex items-center gap-1`}
-                >
-                  <span className='text-primary'>Interview</span>
-                  <span className='text-gray-600'>AI</span>
-                </h1> */}
+               
                 <h1
                   className={`font-bold whitespace-nowrap transition-all duration-300 overflow-hidden
    'w-auto opacity-100'}
     ${outfit.className} text-2xl flex items-center gap-2`}
                 >
-                  {/* <BrainCircuit className='w-8 h-8 text-primary' /> */}
                   <div className='flex flex-col'>
                     <div className='flex items-center gap-1'>
                       <span className='text-primary'>Interview</span>
@@ -289,7 +283,7 @@ const DashboardLayout = ({ children }) => {
                 </h1>
               </div>
             </Link>
-          </div>
+          </div> */}
           <div className='flex items-center gap-4 ml-auto'>
             <div className='hidden md:block'>
               <Select value={language} onValueChange={setLanguage}>
