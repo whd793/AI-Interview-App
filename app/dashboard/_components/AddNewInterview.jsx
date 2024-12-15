@@ -1,3 +1,4 @@
+// app/dashboard/_components/AddNewInterview
 'use client';
 import React, { useEffect, useState } from 'react';
 import {
@@ -20,7 +21,9 @@ import {
 import { chatSession } from '@/utils/GeminiAIModal';
 import { LoaderCircle, Globe } from 'lucide-react';
 import { db } from '@/utils/db';
-import { MockInterview } from '@/utils/schema';
+// import { MockInterview } from '@/utils/schema';
+import { MockInterview, UserCredits } from '@/utils/schema';
+import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
@@ -69,9 +72,33 @@ function AddNewInterview() {
   }, []);
 
   const onSubmit = async (e) => {
-    setLoading(true);
     e.preventDefault();
 
+    // Check credits first
+    const userCredits = await db
+      .select()
+      .from(UserCredits)
+      .where(
+        eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
+      );
+
+    // if (!userCredits.length || userCredits[0].credits <= 0) {
+    //   toast.error(t('noCredits'));
+    //   return;
+    // }
+
+    if (!userCredits.length || userCredits[0].credits <= 0) {
+      toast.error(
+        <div className='flex flex-col gap-2'>
+          <span>{t('noCredits')}</span>
+          <span className='text-sm text-gray-500'>{t('waitForCredits')}</span>
+        </div>
+      );
+      setOpenDialog(false);
+      return;
+    }
+
+    setLoading(true);
     const selectedLangPrompt =
       languages.find((lang) => lang.code === selectedLanguage)?.prompt ||
       'Generate in English';
@@ -116,6 +143,17 @@ function AddNewInterview() {
           createdAt: moment().format('DD-MM-yyyy'),
         })
         .returning({ mockId: MockInterview.mockId });
+
+      // Deduct credit after successful creation
+      await db
+        .update(UserCredits)
+        .set({
+          credits: userCredits[0].credits - 1,
+          // lastUpdated: new Date(),
+        })
+        .where(
+          eq(UserCredits.userEmail, user?.primaryEmailAddress?.emailAddress)
+        );
 
       if (resp?.[0]?.mockId) {
         setOpenDialog(false);

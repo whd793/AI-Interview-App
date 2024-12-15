@@ -1,3 +1,4 @@
+// app/layout.js
 import { Outfit } from 'next/font/google';
 import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';

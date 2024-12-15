@@ -1,4 +1,11 @@
-import { pgTable, serial, text, varchar, integer } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  serial,
+  text,
+  varchar,
+  integer,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 
 export const MockInterview = pgTable('mockInterview', {
   id: serial('id').primaryKey(),
@@ -23,6 +30,14 @@ export const UserAnswer = pgTable('userAnswer', {
   userEmail: varchar('userEmail'),
   createdAt: varchar('createdAt'),
   language: varchar('language', { length: 10 }).notNull().default('en-US'), // Add this line
+});
+
+// utils/schema.js
+export const UserCredits = pgTable('userCredits', {
+  id: serial('id').primaryKey(),
+  userEmail: varchar('userEmail').notNull(),
+  credits: integer('credits').notNull().default(5),
+  lastUpdated: timestamp('lastUpdated').notNull().defaultNow(),
 });
 
 // export const QuestionBank = pgTable('questionBank', {

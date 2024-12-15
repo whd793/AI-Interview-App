@@ -218,6 +218,11 @@ const translations = {
       "Please allow audio usage in your phone or browser settings first. To respond, please press the 'Start Recording' button first.",
     startinterviewinfo:
       "Please allow access to your browser's webcam and microphone. You will be presented with 5 questions.",
+
+    credits: 'Credits',
+    nextCredit: 'Next Credit In',
+    noCredits: 'No credits available',
+    waitForCredits: 'Please wait for credits to refresh',
   },
   ko: {
     dashboard: '대시보드',
@@ -430,6 +435,10 @@ const translations = {
       "핸드폰이나 브라우저 설정에서 오디오 사용 허가를 먼저 해주세요. 답하시려면 '녹화 시작' 버튼을 먼저 눌러주세요",
     startinterviewinfo:
       '브라우저 웹캠과 오디오 사용 권한을 허락해주세요. 5개의 질문이 제공됩니다. ',
+    credits: '크레딧',
+    nextCredit: '다음 크레딧까지',
+    noCredits: '크레딧이 없습니다',
+    waitForCredits: '크레딧이 충전될 때까지 기다려주세요',
   },
 };
 
