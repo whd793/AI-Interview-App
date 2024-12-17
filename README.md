@@ -180,12 +180,6 @@ npm run test:e2e
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-## 👥 Team
-
-- Lead Developer - [Your Name](https://github.com/yourusername)
-- AI Integration - [Team Member](https://github.com/teammember)
-- UI/UX Design - [Designer](https://github.com/designer)
-
 ## 🙏 Acknowledgments
 
 - Shadcn UI for the component library
@@ -195,9 +189,9 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## 📧 Contact
 
-[Your Name] - [@yourusername](https://twitter.com/yourusername) - email@example.com
+Won Lee - whd793@gmail.com
 
-Project Link: [https://github.com/yourusername/interview-ai](https://github.com/yourusername/interview-ai)
+Project Link: https://ai-interview-app-u24p.vercel.app/
 
 ---
 
